@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Email List</title>
+</head>
+<body>
+<h2>Email List</h2>
+
+<!-- Display existing emails -->
+<table>
+    <tr>
+        <th>Email</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="email : ${emailList}">
+        <td th:text="${email}"></td>
+        <td>
+            <a th:href="@{/editEmail(email=${email})}">Edit</a>
+            <a th:href="@{/deleteEmail(email=${email})}">Delete</a>
+        </td>
+    </tr>
+</table>
+
+<!-- Add new email form -->
+<h3>Add New Email</h3>
+<form th:action="@{/addEmail}" method="post">
+    <input type="text" name="newEmail" placeholder="Enter new email" required/>
+    <button type="submit">Add</button>
+</form>
+</body>
+</html>

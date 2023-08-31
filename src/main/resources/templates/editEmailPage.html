@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Email</title>
+</head>
+<body>
+<h2>Edit Email</h2>
+
+<form th:action="@{/saveEmail}" method="post">
+    <input type="hidden" name="emailToEdit" th:value="${emailToEdit}"/>
+    <label for="editedEmail">Edited Email:</label>
+    <input type="text" id="editedEmail" name="editedEmail" th:value="${emailToEdit}" required/>
+    <button type="submit">Save</button>
+</form>
+
+<a th:href="@{/emails}">Back to Email List</a>
+</body>
+</html>
