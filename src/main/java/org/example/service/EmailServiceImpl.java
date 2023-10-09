@@ -23,17 +23,25 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class EmailServiceImpl {
-    @Autowired
     private JavaMailSender sender;
-    @Autowired
     private SpringTemplateEngine templateEngine;
-    @Autowired
     private MailAddressRepository repository;
 
+    @Autowired
+    public EmailServiceImpl(JavaMailSender sender, SpringTemplateEngine templateEngine, MailAddressRepository repository) {
+        this.sender = sender;
+        this.templateEngine = templateEngine;
+        this.repository = repository;
+    }
+
     public void sendMail(String[] toAddresses, String from, String subject, List<PositionDTO> positionDTO) {
+        if (positionDTO.isEmpty()) {
+            log.info("No positions to send");
+            return;
+        }
         MimeMessage mailMessage = sender.createMimeMessage();
         String mailText = createMailText(positionDTO);
-        log.info("Email configuration: from {}, subject {}, body {}, addresses{}", from, subject, mailText, toAddresses);
+        log.info("Email configuration: from {}, subject {}, addresses{}", from, subject, toAddresses);
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mailMessage,
                     MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
@@ -43,34 +51,21 @@ public class EmailServiceImpl {
             helper.setSubject(subject);
             helper.setText(mailText, true);
             sender.send(mailMessage);
+            log.info("Email was successfully sent");
         } catch (MessagingException e) {
             log.error("Email wasn't sent due to {}", e.getMessage());
         }
     }
 
     public String createMailText(List<PositionDTO> positions) {
-//        String mailText = positions.stream().map(positionDTO -> {
-            Map<String, Object> mailProperties = createMailProperties(positions);
-            Context context = new Context();
-            context.setVariables(mailProperties);
-            return templateEngine.process("positionEmailTemplate", context);
-//        }).collect(Collectors.joining());
-//        return mailText;
+        Map<String, Object> mailProperties = createMailProperties(positions);
+        Context context = new Context();
+        context.setVariables(mailProperties);
+        return templateEngine.process("positionEmailTemplate", context);
     }
 
     private Map<String, Object> createMailProperties(List<PositionDTO> positionDTOs) {
         Map<String, Object> mailProperties = new HashMap<>();
-//
-//        mailProperties.put("projectCode", positionDTO.getProjectCode());
-//        mailProperties.put("primaryRole", positionDTO.getPrimaryRole());
-//        mailProperties.put("primarySkill", positionDTO.getPrimarySkill());
-//        mailProperties.put("seniority", positionDTO.getSeniorityLvl().getSeniorityLvl());
-//        mailProperties.put("mustHaveSkills", createListOfMustHaveSkills(positionDTO.getSkills()));
-//        mailProperties.put("niceToHaveSkills", createListOfNiceToHaveSkills(positionDTO.getSkills()));
-//        mailProperties.put("positionLocations", positionDTO.getPositionLocations());
-//        mailProperties.put("billingType", positionDTO.getPositionBillingType());
-//        mailProperties.put("staffingCommitmentType", positionDTO.getStaffingCommitmentTypeDTO().getType());
-//        mailProperties.put("domain", positionDTO.getDomain());
 
         mailProperties.put("positions", positionDTOs);
 
@@ -99,11 +94,11 @@ public class EmailServiceImpl {
         return allAddresses;
     }
 
-    public void addEmailAddress(String mailAddress) {
+    public void addEmailAddress(MailAddress mailAddress) {
         try {
-            repository.save(MailAddress.builder().mailAddress(mailAddress).build());
+            repository.save(mailAddress);
             log.info("Email address {} was saved", mailAddress);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("Email address {} wasn't saved", mailAddress);
         }
     }
@@ -117,9 +112,9 @@ public class EmailServiceImpl {
         }
     }
 
-    public void updateEmailAddress(String mailAddress, String newMailAddress) {
+    public void updateEmailAddress(String mailAddress, MailAddress newMailAddress) {
         try {
-            repository.updateMailAddress(mailAddress, newMailAddress);
+            repository.updateMailAddress(mailAddress, newMailAddress.getMailAddress());
             log.info("Email address {} was successfully change to {}", mailAddress, newMailAddress);
         } catch (Exception e) {
             log.error("Email address{} wasn't updated due to {}", mailAddress, e.getMessage());

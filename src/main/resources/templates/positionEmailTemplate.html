@@ -15,8 +15,6 @@
             font-family: 'Roboto', sans-serif;
             font-size: 48px;
         }
-
-
     </style>
 </head>
 <body>
@@ -46,7 +44,6 @@
         </li>
     </ul>
     <h3>Position Details:</h3>
-    <p><strong>PositionLocations:</strong></p>
     <ul>
         <p><strong>PositionLocations:</strong></p>
         <li th:each="location : ${position.positionLocations}">
@@ -54,7 +51,7 @@
         </li>
     </ul>
     <p><strong>Position Billing Type:</strong> <span th:text="${position.positionBillingType}"/></p>
-    <p><strong>Staffing Commitment Type:</strong> <span th:text="${position.getStaffingCommitmentTypeDTO().getType()}"/></p>
+    <p th:if="${position.staffingCommitmentTypeDTO != null}"><strong>Staffing Commitment Type:</strong> <span th:text="${position.staffingCommitmentTypeDTO.type}"/></p>
     <p><strong>Domain:</strong> <span th:text="${position.domain}"/></p>
 </div>
 

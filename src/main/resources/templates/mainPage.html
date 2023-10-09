@@ -6,6 +6,16 @@
 <body>
 <h1>Welcome to the Greeting Page</h1>
 
+<a href="http://localhost:2244/emails">Mail list</a>
+<div th:if="${cookie == null}">
+    <h4>Please setup cookie from epam system</h4>
+</div>
+<br/>
+<form th:action="@{/cookie}" method="post">
+    <input type="text" name="cookie" placeholder="set cookie">
+    <button type="submit">Add Cookie</button>
+</form>
+
 <form th:action="@{/}" method="post">
     <button type="submit" th:text="${jobEnabled ? 'Disable Job' : 'Enable Job'}">Toggle Job</button>
 </form>

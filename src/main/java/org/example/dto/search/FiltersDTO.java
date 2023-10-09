@@ -6,12 +6,12 @@ import lombok.*;
 import java.util.List;
 import java.util.Map;
 
-@Data
 @ToString
 @Builder
-@Value
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@Setter
+@Getter
 public class FiltersDTO {
     @JsonProperty("active")
     private String active;

@@ -30,4 +30,6 @@ public class PositionDTO {
     String domain;
     @JsonProperty("containerCode")
     String projectCode;
+    @JsonProperty("creationDate")
+    long creationDate;
 }

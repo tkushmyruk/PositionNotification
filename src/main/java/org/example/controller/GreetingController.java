@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @Slf4j
@@ -22,14 +23,21 @@ public class GreetingController {
     public String greeting(Model model) {
         log.info("greeting");
         model.addAttribute("jobEnabled", positionService.isJobEnabled);
-        return "main";
+        model.addAttribute("cookie", positionService.cookie);
+        return "mainPage";
     }
 
     @PostMapping("/")
-    public String toggleJobStatus(Model model) {
+    public String changeJobStatus(Model model) {
         model.addAttribute("jobEnabled", positionService.isJobEnabled);
         positionService.enableJob();
-        return "main";
+        return "redirect:/";
+    }
+
+    @PostMapping("/cookie")
+    public String setCookie(@RequestParam String cookie){
+        positionService.cookie = cookie;
+        return "redirect:/";
     }
 
 

@@ -38,7 +38,7 @@ class EmailServiceImplTest {
         SkillDTO skill2 = new SkillDTO("Amazon Web Services", true);
         SkillDTO skill3 = new SkillDTO("Go Language", false);
 
-        StaffingCommitmentTypeDTO staffingCommitmentTypeDTO = new StaffingCommitmentTypeDTO("Type");
+        StaffingCommitmentTypeDTO staffingCommitmentTypeDTO = new StaffingCommitmentTypeDTO(null);
 
         PositionDTO positionDTO = PositionDTO.builder()
                 .projectCode("ClGX")
@@ -60,7 +60,7 @@ class EmailServiceImplTest {
                 .seniorityLvl(seniorityLvl)
                 .positionLocations(List.of(location1, location2, location3))
                 .skills(List.of(skill1, skill2, skill3))
-                .staffingCommitmentTypeDTO(staffingCommitmentTypeDTO)
+                .staffingCommitmentTypeDTO(null)
                 .positionBillingType("billing")
                 .domain("domain")
                 .build();
@@ -69,7 +69,7 @@ class EmailServiceImplTest {
 
         String[] addresses = Arrays.array("taras.kuhsmyruk@gmail.com");
 
-        emailService.sendMail(addresses, "taras_kushmyruk@epam.com", "testEmailService", positionDTOs);
+//        emailService.sendMail(addresses, "taras_kushmyruk@epam.com", "testEmailService", positionDTOs);
 
         System.out.println(emailService.createMailText(positionDTOs));
 
